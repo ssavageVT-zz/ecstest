@@ -1,0 +1,72 @@
+Description: >
+    The template to create an ecs service and associate with a load balancer if provided.
+
+Parameters: 
+
+    Cluster:
+        Description: The cluster name where the container is deployed.
+        Type: String
+        Default: ecstestcluster
+
+    DesiredCount: 
+        Description: The desired number of task instances that needs to be started.
+        Type: Number
+        Default: 1
+    
+    PortNumber:
+        Description: The port number exposed by the container.
+        Type: String
+        Default: 8080
+
+    ImageName:
+        Description: The image name of the conatainer.
+        Type: String
+        Default: ecstestimage
+
+
+    Memory:
+        Description: The memory that is allocated to the container.
+        Type: Number
+        Default: 2048
+    
+    Cpu:
+        Description: The cpu that is allocated to the container.
+        Type: Number
+        Default: 256
+    
+    IamRole:
+        Description: The iam role that is assigned to a container.
+        Type: String
+        Default: default
+    
+    LogGroup:
+        Description: The cloud watch log group that is assigned to a container where the logs are written.
+        Type: String
+        Default: default
+
+Resources:
+    Service: 
+        Type: AWS::ECS::Service
+        Properties: 
+            Cluster: !Ref Cluster
+            Role: !Ref IamRole
+            DesiredCount: !Ref DesiredCount
+            TaskDefinition: !Ref TaskDefinition
+
+    TaskDefinition:
+        Type: AWS::ECS::TaskDefinition
+        Properties:
+            Family: ecstest
+            ContainerDefinitions:
+                - Name: ecstest
+                  Essential: true
+                  Image: !Ref ImageName
+                  Memory: !Ref Memory
+                  Cpu: !Ref Cpu
+                  PortMappings:
+                    - ContainerPort: 8080
+                  LogConfiguration:
+                    LogDriver: awslogs
+                    Options:
+                        awslogs-group: !Ref LogGroup
+                        awslogs-region: !Ref AWS::Region
