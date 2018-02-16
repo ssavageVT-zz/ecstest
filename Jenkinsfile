@@ -15,15 +15,15 @@ node {
             sh "./mvnw clean"
         }
 
-        stage('backend tests') {
-            try {
-                sh "./mvnw test"
-            } catch(err) {
-                throw err
-            } finally {
-                junit '**/target/surefire-reports/TEST-*.xml'
-            }
-        }
+        //stage('backend tests') {
+        //    try {
+        //        sh "./mvnw test"
+        //    } catch(err) {
+        //        throw err
+        //    } finally {
+        //        junit '**/target/surefire-reports/TEST-*.xml'
+        //    }
+        //}
 
         stage('packaging') {
             sh "./mvnw verify -Pprod -DskipTests"
