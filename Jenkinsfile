@@ -29,17 +29,17 @@ node {
             sh "./mvnw verify -Pprod -DskipTests"
             archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
         }
+  
+        def dockerImage
+        stage('build docker') {
+            sh "whoami"
+            sh "ls -l src/main/docker"
+            sh "ls -l target/"
+            sh "cp -R src/main/docker target/"
+            sh "cp target/*.war target/docker/"
+            dockerImage = docker.build('ssavagevt22/ecstest', 'target/docker')
+        }
 
-    }
-
-    def dockerImage
-    stage('build docker') {
-        sh "whoami"
-        sh "ls -l src/main/docker"
-        sh "ls -l target/"
-        sh "cp -R src/main/docker target/"
-        sh "cp target/*.war target/docker/"
-        dockerImage = docker.build('ssavagevt22/ecstest', 'target/docker')
     }
 
     stage('publish docker') {
