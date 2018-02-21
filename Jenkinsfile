@@ -41,10 +41,23 @@ node {
         }
 
         stage('publish docker') {
-            //docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-login') {
-            docker.withRegistry('https://docker.io', 'docker-hub-login') {
-                dockerImage.push 'latest'
+
+            withCredentials([[$class: 'UsernamePasswordMultiBinding',
+                credentialsId: 'docker-hub-login',
+                usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+
+                //sh 'echo uname=$USERNAME pwd=$PASSWORD'
+                sh 'docker login -u $USERNAME -p $PASSWORD https://registry.hub.docker.com'
+                sh "docker push registry.hub.docker.com/ssavagevt22/ecstest"
+
+                //docker.withRegistry("${docker_registry_url}", params.docker_user_creds) {
+                //dockerImage.push("latest")
             }
+
+            //docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-login') {
+            //docker.withRegistry('https://docker.io', 'docker-hub-login') {
+            //    dockerImage.push 'latest'
+            //}
         }
 
     }
