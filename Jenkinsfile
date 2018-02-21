@@ -41,13 +41,14 @@ node {
         }
 
         stage('publish docker') {
-            docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-login') {
+            //docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-login') {
+            docker.withRegistry('https://docker.io', 'docker-hub-login') {
                 dockerImage.push 'latest'
             }
         }
 
     }
-    
+
     stage('deploy to AWS ECS') {
         sh "aws s3 mb s3://ssavagevt22"
         sh "aws s3 cp ecs_cf_template.yml s3://ssavagevt22/cloudformationtemplates/ecstest.template"
