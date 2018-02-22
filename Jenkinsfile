@@ -74,7 +74,7 @@ node {
             sh "aws s3 mb s3://ssavagevt22"
             sh "aws s3 cp ecs_cf_template.yml s3://ssavagevt22/cloudformationtemplates/ecstest.template"
             sh "aws configure set default.region us-east-1"
-            sh "aws cloudformation create-stack --stack-name ecstest --template-url https://s3-us-east-1.amazonaws.com/ssavagevt22/cloudformationtemplates/ecstest.template"
+            sh "aws cloudformation create-stack --stack-name ecstest --template-url https://s3.amazonaws.com/ssavagevt22/cloudformationtemplates/ecstest.template"
             docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-login') {
                 dockerImage.push 'latest'
             }
