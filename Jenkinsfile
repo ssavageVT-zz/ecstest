@@ -15,34 +15,51 @@ node {
             sh "./mvnw clean"
         }
 
-        stage('backend tests') {
-            try {
-                sh "./mvnw test"
-            } catch(err) {
-                throw err
-            } finally {
-                junit '**/target/surefire-reports/TEST-*.xml'
-            }
-        }
+        //stage('backend tests') {
+        //    try {
+        //        sh "./mvnw test"
+        //    } catch(err) {
+        //        throw err
+        //    } finally {
+        //        junit '**/target/surefire-reports/TEST-*.xml'
+        //    }
+        //}
 
         stage('packaging') {
             sh "./mvnw verify -Pprod -DskipTests"
             archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
         }
-
-    }
-
-    def dockerImage
-    stage('build docker') {
-        sh "cp -R src/main/docker target/"
-        sh "cp target/*.war target/docker/"
-        dockerImage = docker.build('ssavagevt22/ecstest', 'target/docker')
-    }
-
-    stage('publish docker') {
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-login') {
-            dockerImage.push 'latest'
+  
+        def dockerImage
+        stage('build docker') {
+            sh "whoami"
+            sh "ls -l src/main/docker"
+            sh "ls -l target/"
+            sh "cp -R src/main/docker target/"
+            sh "cp target/*.war target/docker/"
+            dockerImage = docker.build('ssavagevt22/ecstest', 'target/docker')
         }
+
+        stage('publish docker') {
+
+            withCredentials([[$class: 'UsernamePasswordMultiBinding',
+                credentialsId: 'docker-hub-login',
+                usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+
+                //sh 'echo uname=$USERNAME pwd=$PASSWORD'
+                sh 'docker login -u $USERNAME -p $PASSWORD https://registry.hub.docker.com'
+                sh "docker push registry.hub.docker.com/ssavagevt22/ecstest"
+
+                //docker.withRegistry("${docker_registry_url}", params.docker_user_creds) {
+                //dockerImage.push("latest")
+            }
+
+            //docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-login') {
+            //docker.withRegistry('https://docker.io', 'docker-hub-login') {
+            //    dockerImage.push 'latest'
+            //}
+        }
+
     }
     stage('deploy to AWS ECS') {
     withCredentials([[
