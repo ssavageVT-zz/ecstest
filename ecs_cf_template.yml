@@ -49,7 +49,6 @@ Resources:
         Type: AWS::ECS::Service
         Properties: 
             Cluster: !Ref Cluster
-            Role: !Ref IamRole
             DesiredCount: !Ref DesiredCount
             TaskDefinition: !Ref TaskDefinition
 
