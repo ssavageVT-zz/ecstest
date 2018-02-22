@@ -62,7 +62,7 @@ node {
 
     }
 
-    stage('deploy to AWS ECS')
+    stage('deploy to AWS ECS') {
 
         withCredentials([[
             $class: 'AmazonWebServicesCredentialsBinding',
