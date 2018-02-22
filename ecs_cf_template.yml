@@ -6,7 +6,7 @@ Parameters:
     Cluster:
         Description: The cluster name where the container is deployed.
         Type: String
-        Default: ecstestcluster
+        Default: default
 
     DesiredCount: 
         Description: The desired number of task instances that needs to be started.
