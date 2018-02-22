@@ -62,12 +62,21 @@ node {
 
     }
 
-    stage('deploy to AWS ECS') {
-        sh "aws s3 mb s3://ssavagevt22"
-        sh "aws s3 cp ecs_cf_template.yml s3://ssavagevt22/cloudformationtemplates/ecstest.template"
-        sh "aws cloudformation create-stack --stack-name ecstest --template-url s3://ssavagevt22/cloudformationtemplates/ecstest.template"
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-login') {
-            dockerImage.push 'latest'
+    stage('deploy to AWS ECS')
+
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'aws',
+            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+
+            sh "aws s3 mb s3://ssavagevt22"
+            sh "aws s3 cp ecs_cf_template.yml s3://ssavagevt22/cloudformationtemplates/ecstest.template"
+            sh "aws cloudformation create-stack --stack-name ecstest --template-url s3://ssavagevt22/cloudformationtemplates/ecstest.template"
+            docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-login') {
+                dockerImage.push 'latest'
+            }
         }
     }
 }
