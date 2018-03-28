@@ -21,7 +21,7 @@ Parameters:
     ImageName:
         Description: The image name of the conatainer.
         Type: String
-        Default: ssavagevt22/ecstest
+        Default: ssavagevt22/ecstest:latest
 
 
     Memory:
