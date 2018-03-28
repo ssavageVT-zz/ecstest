@@ -37,7 +37,7 @@ node {
             sh "ls -l target/"
             sh "cp -R src/main/docker target/"
             sh "cp target/*.war target/docker/"
-            dockerImage = docker.build('ssavagevt22/ecstest', 'target/docker')
+            dockerImage = docker.build('registry.hub.docker.com/ssavagevt22/ecstest', 'target/docker')
         }
 
         stage('publish docker') {
