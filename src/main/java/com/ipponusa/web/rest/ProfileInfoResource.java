@@ -1,15 +1,17 @@
 package com.ipponusa.web.rest;
 
-import com.ipponusa.config.DefaultProfileUtil;
-
-import io.github.jhipster.config.JHipsterProperties;
-
-import org.springframework.core.env.Environment;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.springframework.core.env.Environment;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ipponusa.config.DefaultProfileUtil;
+
+import io.github.jhipster.config.JHipsterProperties;
 
 /**
  * Resource to return information about the currently running Spring profiles.
@@ -31,6 +33,11 @@ public class ProfileInfoResource {
     public ProfileInfoVM getActiveProfiles() {
         String[] activeProfiles = DefaultProfileUtil.getActiveProfiles(env);
         return new ProfileInfoVM(activeProfiles, getRibbonEnv(activeProfiles));
+    }
+
+    @GetMapping("/test-message")
+    public String getTestMessage() {
+        return "test sample";
     }
 
     private String getRibbonEnv(String[] activeProfiles) {
