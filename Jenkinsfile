@@ -49,8 +49,9 @@ node {
                 //sh 'echo uname=$USERNAME pwd=$PASSWORD'
                 sh 'docker login -u $USERNAME -p $PASSWORD https://registry.hub.docker.com'
                 //sh "docker push registry.hub.docker.com/ssavagevt22/ecstest"
-				sh "docker push latest"
-
+				sh "docker push ssavagevt22/ecstest"
+				
+				
                 //docker.withRegistry("${docker_registry_url}", params.docker_user_creds) {
                 //dockerImage.push("latest")
             }
